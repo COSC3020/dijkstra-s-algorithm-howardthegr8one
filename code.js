@@ -2,51 +2,55 @@
 // Sources/references used:
 // https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
 
-function dijkstra(graph, sourceNode) {
+function dijkstra(graph, source) {
+	// creates dictionary holding each node with distance of Infinity
+	// source node with distance of 0
+	var distGraph = {};
+	for (var v in graph) {
+		if (v == source) {
+			distGraph[v] = 0;
+		}
+		else {
+			distGraph[v] = Infinity;
+		}
+	}
+    // used to keep track of nodes to visit and not visit
+	var marked = [source];
+	var cost = 0;
+	var currentNode;
+	var stack = [source];
+	// while unmarked vertices remain
+	while (marked.length != Object.keys(graph).length) {
+		currentNode = stack.pop();
+		// pushes all neighboring nodes onto stack
+		for (var node in graph[currentNode]) {
+			stack.push(node);
+			cost = 0;
+			// checks distance of each neighboring node
+			for (let i = 0; i < stack.length; i++) {
+				node = stack[i];
 
-    // populates unvisited array with all nodes and
-    // distGraph array with either 0 for the sourceNode and Infinity otherwise
-    var unvisited = new Array();
-    var distGraph = new Array();
-    var index = 0;
-    for (node of graph) {
-        unvisited.push(node[0])
-        if (node[0] == sourceNode)
-            distGraph[index] = [node[0], 0]
-        else
-            distGraph[index] = [node[0], Infinity]
-        index++;
-        for (var i = 1; i < node.length; i++) {
-        }
-    }
+				if (!marked.includes(node)) {
+					marked.push(node);
+					cost = graph[currentNode][node];
 
-    // while unvisited nodes remain
-    var currentNode = Infinity
-    while (unvisited.length > 0) {
-        for (node in distGraph) {
-            if (distGraph[node][1] < currentNode) {
-                currentNode = node;
-            }
-        }
-
-        for (var i = 1; i < graph[currentNode].length; i++) {
-            if (graph[i][1] != undefined) {
-                if (distGraph[currentNode][1] + graph[currentNode][i][1]  < distGraph[i][1]) {
-                    distGraph[i][1] = distGraph[currentNode][1] + graph[currentNode][i][1]
-                }
-            }
-            else {
-                distGraph[i][1] = distGraph[currentNode][1]
-            }
-        }
-    }
-    return distGraph;
+					if (distGraph[currentNode] + cost < distGraph[node]) {
+						distGraph[node] = distGraph[currentNode]+cost;
+					}
+				}	
+			}
+		}
+	}
+	// removes source node from list leaving every other node and their
+	// distance from the source node
+	delete distGraph[source];
+	return distGraph;
 }
 // how I'm implementing my adjacency list
-// legend: [node, [neighbor, weight], [neighbor, weight]]
-//testGraph0 = [
-//    [1, [2,5], [3,4]],
-//    [2, [4,1]],
-//    [3, [4,1]],
-//    [4]
-//]
+// I switched back to dictionaries, not sure what I was trying to accomlish using multidimensional arrays
+// var graph0 = { 'A': {'B': 2},
+// 			   'B': {'A': 2, 'C': 1, 'D': 5},
+// 			   'C': {'B': 1, 'E': 1},
+// 			   'D': {'B': 5, 'F': 6},
+// 			   'E': {'C': 1, 'F': 9},
+// 			   'F': {'D': 6, 'E': 9} };
