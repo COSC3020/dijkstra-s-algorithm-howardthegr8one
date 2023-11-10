@@ -6,7 +6,7 @@ function dijkstra(graph, source) {
 
 	// creates dictionary holding each node with distance of Infinity
 	// source node with distance of 0
-    let unvisited = []
+    	let unvisited = []
 	let distGraph = {}
 	for (var v in graph) {
 		if (v == source) 
@@ -31,13 +31,21 @@ function dijkstra(graph, source) {
         // for each edge connected to currentNode
         for (neighbor in graph[currentNode]) {
             stack.push(neighbor)
+            console.log("cur: " + currentNode)
+            console.log("stack: " + stack)
             let cost = distGraph[currentNode] + graph[currentNode][neighbor]
             distGraph[neighbor] = Math.min(distGraph[neighbor], cost)
         }
         // remove currentNode from unvisited array
         let i = unvisited.indexOf(currentNode)
         unvisited.splice(i, 1)
-        currentNode = stack.pop()
+        let lowest = Infinity
+        for(let i = 0; i < stack.length; i++) {
+            console.log("stack[i]: " + stack[i])
+            if (distGraph[stack[i]] < lowest)
+                currentNode = stack[i]
+        }
+        stack = []
     }
     return distGraph
 }
