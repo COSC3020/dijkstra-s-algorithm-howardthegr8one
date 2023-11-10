@@ -3,48 +3,43 @@
 // https://stackoverflow.com/questions/5767325/how-can-i-remove-a-specific-item-from-an-array-in-javascript
 
 function dijkstra(graph, source) {
+
 	// creates dictionary holding each node with distance of Infinity
 	// source node with distance of 0
-	var distGraph = {};
+    let unvisited = []
+	let distGraph = {}
 	for (var v in graph) {
-		if (v == source) {
+		if (v == source) 
 			distGraph[v] = 0;
-		}
-		else {
+		else 
 			distGraph[v] = Infinity;
-		}
+        unvisited.push(v)
 	}
-    // used to keep track of nodes to visit and not visit
-	var marked = [source];
-	var cost = 0;
-	var currentNode;
-	var stack = [source];
-	// while unmarked vertices remain
-	while (marked.length != Object.keys(graph).length) {
-		currentNode = stack.pop();
-		// pushes all neighboring nodes onto stack
-		for (var node in graph[currentNode]) {
-			stack.push(node);
-			cost = 0;
-			// checks distance of each neighboring node
-			for (let i = 0; i < stack.length; i++) {
-				node = stack[i];
+    let currentNode = source
+    let stack = []
 
-				if (!marked.includes(node)) {
-					marked.push(node);
-					cost = graph[currentNode][node];
+    // while unvisited nodes remain
+    while(unvisited.length > 0) {
 
-					if (distGraph[currentNode] + cost < distGraph[node]) {
-						distGraph[node] = distGraph[currentNode]+cost;
-					}
-				}	
-			}
-		}
-	}
-	// removes source node from list leaving every other node and their
-	// distance from the source node
-	delete distGraph[source];
-	return distGraph;
+        // select node with lowest distance
+        for (node in unvisited) {
+            if (distGraph[node] < distGraph[currentNode]) {
+                currentNode = node
+            }
+        }
+
+        // for each edge connected to currentNode
+        for (neighbor in graph[currentNode]) {
+            stack.push(neighbor)
+            let cost = distGraph[currentNode] + graph[currentNode][neighbor]
+            distGraph[neighbor] = Math.min(distGraph[neighbor], cost)
+        }
+        // remove currentNode from unvisited array
+        let i = unvisited.indexOf(currentNode)
+        unvisited.splice(i, 1)
+        currentNode = stack.pop()
+    }
+    return distGraph
 }
 
 /*
