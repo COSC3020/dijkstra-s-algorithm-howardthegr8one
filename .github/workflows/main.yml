@@ -8,4 +8,4 @@ jobs:
     - uses: actions/checkout@v3
     - run: npm i jsverify
     - run: npm i -g mocha --save-dev
-    - run: mocha .\code.test.js
+    - run: mocha code.test.js
