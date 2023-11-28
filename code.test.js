@@ -1,7 +1,7 @@
 const fs = require('fs');
 const assert = require('assert')
 
-eval(fs.readFileSync('testDijkstra.js')+'');
+eval(fs.readFileSync('code.js')+'');
 
 describe('graph0 test', () => {
     const source = 'A'
